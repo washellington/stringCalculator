@@ -14,7 +14,7 @@ class Calculator
   }
 
   def initialize(expression)
-    @expression = expression
+    @expression = expression.strip
     @operands = []
     @operators = []
     @result = 0
@@ -25,16 +25,16 @@ class Calculator
 
     raise "#{base_msg} contains white space charaters" if @expression.strip.scan(/\s+/).present?
 
-    raise "#{base_msg} contains invalid characters" if @expression !~ /\d+[.]\d+|\d+|\+|-|\*|\//
+    raise "#{base_msg} contains invalid characters" if @expression !~ /-?\d+[.]\d+|-?\d+|\+|-|\*|\//
     #check if right number of operands and operators
     raise "#{base_msg} does not have the right number of operands and operators" if @operands.length != (@operators.length + 1)
     #check operator must me surrounded by operands
-    raise "#{base_msg} has misplaced operators"  if @expression.scan(/(?:(?:\d+[.]\d+|\d+)(?:\+|-|\*|\/))+(?:\d+[.]\d+|\d+){1}/).first != @expression
+    raise "#{base_msg} has misplaced operators"  if @expression.scan(/(?:(?:-?\d+[.]\d+|-?\d+)(?:\+|-|\*|\/))+(?:-?\d+[.]\d+|-?\d+){1}/).first != @expression
   end
 
   def parse_expression
-    @operands = @expression.scan(/\d+[.]\d+|\d+/).map(&:to_f) 
-    @operators = @expression.scan(/\+|-|\*|\//)
+    @operands = @expression.scan(/(?<!\d)-?\d+[.]\d+|(?<!\d)-?\d+/).map(&:to_f) 
+    @operators = @expression.scan(/\+|(?<=\d)-(?=-?\d)|\*|\//)
     puts "Operands = ", @operands.inspect
     puts "Operators = ", @operators.inspect
     validations
