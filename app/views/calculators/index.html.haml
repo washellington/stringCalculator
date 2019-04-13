@@ -1,0 +1,14 @@
+
+%h1 Calculator
+
+- flash.each do |name, msg|
+  = content_tag :div, msg, class: name
+= form_tag calculators_path, method: :get do  
+  = label_tag "Expression"
+  = text_field_tag :expression
+  = submit_tag "Calculate"
+- if @calculator.present? && flash.empty?
+  %p= @calculator.expression
+  %p
+    %span Result = 
+    %em= "%0.2f" % @calculator.result 
